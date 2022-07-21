@@ -1,0 +1,124 @@
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+* {
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+   font-family: 'Pacifico', cursive;
+}
+html::-webkit-scrollbar{
+   width: .8rem;
+   background: #80471C;
+}
+html::-webkit-scrollbar-thumb{
+   background: black;
+   border-radius: 5rem;
+}
+section {
+   position: relative;
+   width: 100%;
+   min-height: 100vh;
+   padding: 100px;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   background: #3eb489;
+   transition: 0.5s
+}
+.footer {
+   position: relative;
+   bottom: 200px;
+}
+header {
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: 100%;
+   padding: 20px 100px;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+}
+header ul {
+   position: relative;
+   display: flex;
+}
+header ul li {
+   list-style: none;
+}
+.bogo{
+   position: fixed;
+   bottom: -140px;
+   z-index: 10;
+   left: -0px;
+}
+header ul li a {
+   display: inline-block;
+   color: #fff;
+   font-weight: 400;
+   text-decoration: none;
+}
+.contant {
+   position: relative;
+   width: 100%;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+}
+.contant .textBox {
+   position: relative;
+   max-width: 600px;
+}
+.contant .textBox h2 {
+   color: #fff;
+   font-size: 4em;
+   line-height: 1.5em;
+   font-weight: 900;
+   text-transform: uppercase;
+}
+.contant .textBox h2 span {
+   font-size: 2em;
+}
+.contant .textBox p {
+   color: #fff;
+}
+.contant .textBox a {
+   display: inline-block;
+   margin-top: 20px;
+   padding: 8px 20px;
+   background: #fff;
+   color: #111;
+   border-radius: 40px;
+   font-weight: 500;
+   letter-spacing: 1px;
+   text-decoration: none;
+   text-transform: uppercase;
+} 
+.contant .imgBox {
+   width: 600px;
+   display: flex;
+   padding-right: 50px;
+   justify-content: flex-end;
+}
+.contant .imgBox img {
+   max-width: 460px;
+}
+.thumb {
+   position: absolute;
+   left: 50%;
+   bottom: 20px;
+   transform: translateX(-50%);
+   display: flex;
+}
+.thumb li{
+   list-style: none;
+   display: inline-block;
+   margin: 0 20px;
+   cursor: pointer;
+   transition: 0.5s;
+}
+.thumb li:hover {
+   transform: translateY(-15px);
+}
+.thumb li img {
+   max-width: 60px;
+}

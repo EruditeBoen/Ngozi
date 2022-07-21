@@ -1,0 +1,135 @@
+@import url('https://fonts.googleapis.com/css2?family=Brygada+1918:ital@1&family=Lobster&family=Pacifico&family=Playfair+Display&family=Potta+One&family=Press+Start+2P&display=swap');
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Pacifico', cursive;
+}
+
+section {
+    padding: 40px 15%;
+}
+html::-webkit-scrollbar{
+    width: .8rem;
+    background: #80471C;
+}
+html::-webkit-scrollbar-thumb{
+    background: black;
+    border-radius: 5rem;
+}
+.footer{
+    position: relative;
+    bottom: 200px;
+}
+.contact{
+    background: #3eb489;
+    height: 100%;
+    width: 100%;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: repeat(2, 2fr);
+    align-items: center;
+    grid-gap: 6rem;
+
+}
+.contact-img img{
+    max-width: 100%;
+    width: 520px;
+    height: auto;
+    margin-top: 100px;
+}
+.bogo{
+    position: fixed;
+    bottom: -140px;
+    z-index: 10;
+}
+.contact-form h1{
+    font-size: 80px;
+    color: #fff;
+    margin-bottom: 20px;
+}
+span{
+    color: #80471C;
+}
+.contact-form p {
+    color: black;
+    letter-spacing: 1px;
+    line-height: 26px;
+    font-size: 1.1rem;
+    margin-bottom: 3.8rem;
+}
+.contact-form form {
+    position: relative;
+}
+.contact-form form input,
+form textarea{
+    width: 100%;
+    padding: 7px;
+    border: none;
+    outline: none;
+    background: #191919;
+    color: #fff;
+    font-size: 1.1rem;
+    margin-bottom: 0.7rem;
+    border-radius: 10px;
+}
+.contact-form textarea {
+    resize: none;
+    height: 200px;
+}
+
+.contact-form form .btn{
+    display: inline-block;
+    background: #80471C;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 600;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    width: 220px;
+    transition: ease .20s;
+    cursor: pointer;
+}
+.contact-form form .btn:hover{
+    border: 2px solid #80471C;
+    background: transparent;
+    transform: scale(1.1);
+}
+
+@media(max-width: 1570px){
+    section {
+        padding: 80px 3%;
+        transition: .2s;
+    }
+    .contact-img img {
+        margin-right: 700px;
+    }
+    .contact-form h1 {
+        font-size: 60px;
+    }
+    .contact-form p{
+        margin-bottom: 3rem;
+    }
+}
+@media (max-width: 1090px) {
+    .contact {
+        grid-gap: 2rem;
+        transition: .3s;
+    }
+}
+@media (max-width: 1000px){
+    .contact{
+        grid-template-columns: 1fr;
+    }
+    .contact-form {
+        order: 2;
+    }
+    .contact-img img {
+        max-width: 100%;
+        width: 100%;
+        height: auto;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+}
