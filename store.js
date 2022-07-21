@@ -1,103 +1,145 @@
-if (document.readyState == 'loading') {
-    document.addEventListener('DOMContentLoaded', ready)
-} else {
-    ready()
+class CartItem{
+    constructor(name, desc, img, price){
+        this.name = name
+        this.desc = desc
+        this.img=img
+        this.price = price
+        this.quantity = 1
+   }
 }
 
-function ready() {
-    var removeCartItemButtons = document.getElementsByClassName('btn-danger')
-    for (var i = 0; i < removeCartItemButtons.length; i++) {
-        var button = removeCartItemButtons[i]
-        button.addEventListener('click', removeCartItem)
+class LocalCart{
+    static key = "cartItems"
+
+    static getLocalCartItems(){
+        let cartMap = new Map()
+     const cart = localStorage.getItem(LocalCart.key)   
+     if(cart===null || cart.length===0)  return cartMap
+        return new Map(Object.entries(JSON.parse(cart)))
     }
 
-    var quantityInputs = document.getElementsByClassName('cart-quantity-input')
-    for (var i = 0; i < quantityInputs.length; i++) {
-        var input = quantityInputs[i]
-        input.addEventListener('change', quantityChanged)
-    }
-
-    var addToCartButtons = document.getElementsByClassName('shop-item-button')
-    for (var i = 0; i < addToCartButtons.length; i++) {
-        var button = addToCartButtons[i]
-        button.addEventListener('click', addToCartClicked)
-    }
-
-    document.getElementsByClassName('btn-purchase')[0].addEventListener('click', purchaseClicked)
-}
-
-function purchaseClicked() {
-    alert('Thank you for your purchase')
-    var cartItems = document.getElementsByClassName('cart-items')[0]
-    while (cartItems.hasChildNodes()) {
-        cartItems.removeChild(cartItems.firstChild)
-    }
-    updateCartTotal()
-}
-
-function removeCartItem(event) {
-    var buttonClicked = event.target
-    buttonClicked.parentElement.parentElement.remove()
-    updateCartTotal()
-}
-
-function quantityChanged(event) {
-    var input = event.target
-    if (isNaN(input.value) || input.value <= 0) {
-        input.value = 1
-    }
-    updateCartTotal()
-}
-
-function addToCartClicked(event) {
-    var button = event.target
-    var shopItem = button.parentElement.parentElement
-    var title = shopItem.getElementsByClassName('shop-item-title')[0].innerText
-    var price = shopItem.getElementsByClassName('shop-item-price')[0].innerText
-    var imageSrc = shopItem.getElementsByClassName('shop-item-image')[0].src
-    addItemToCart(title, price, imageSrc)
-    updateCartTotal()
-}
-
-function addItemToCart(title, price, imageSrc) {
-    var cartRow = document.createElement('div')
-    cartRow.classList.add('cart-row')
-    var cartItems = document.getElementsByClassName('cart-items')[0]
-    var cartItemNames = cartItems.getElementsByClassName('cart-item-title')
-    for (var i = 0; i < cartItemNames.length; i++) {
-        if (cartItemNames[i].innerText == title) {
-            alert('This item is already added to the cart')
-            return
+    static addItemToLocalCart(id, item){
+        let cart = LocalCart.getLocalCartItems()
+        if(cart.has(id)){
+            let mapItem = cart.get(id)
+            mapItem.quantity +=1
+            cart.set(id, mapItem)
         }
+        else
+        cart.set(id, item)
+       localStorage.setItem(LocalCart.key,  JSON.stringify(Object.fromEntries(cart)))
+       updateCartUI()
+        
     }
-    var cartRowContents = `
-        <div class="cart-item cart-column">
-            <img class="cart-item-image" src="${imageSrc}" width="100" height="100">
-            <span class="cart-item-title">${title}</span>
-        </div>
-        <span class="cart-price cart-column">${price}</span>
-        <div class="cart-quantity cart-column">
-            <input class="cart-quantity-input" type="number" value="1">
-            <button class="btn btn-danger" type="button">REMOVE</button>
-        </div>`
-    cartRow.innerHTML = cartRowContents
-    cartItems.append(cartRow)
-    cartRow.getElementsByClassName('btn-danger')[0].addEventListener('click', removeCartItem)
-    cartRow.getElementsByClassName('cart-quantity-input')[0].addEventListener('change', quantityChanged)
+
+    static removeItemFromCart(id){
+    let cart = LocalCart.getLocalCartItems()
+    if(cart.has(id)){
+        let mapItem = cart.get(id)
+        if(mapItem.quantity>1)
+       {
+        mapItem.quantity -=1
+        cart.set(id, mapItem)
+       }
+       else
+       cart.delete(id)
+    } 
+    if (cart.length===0)
+    localStorage.clear()
+    else
+    localStorage.setItem(LocalCart.key,  JSON.stringify(Object.fromEntries(cart)))
+       updateCartUI()
+    }
 }
 
-function updateCartTotal() {
-    var cartItemContainer = document.getElementsByClassName('cart-items')[0]
-    var cartRows = cartItemContainer.getElementsByClassName('cart-row')
-    var total = 0
-    for (var i = 0; i < cartRows.length; i++) {
-        var cartRow = cartRows[i]
-        var priceElement = cartRow.getElementsByClassName('cart-price')[0]
-        var quantityElement = cartRow.getElementsByClassName('cart-quantity-input')[0]
-        var price = parseFloat(priceElement.innerText.replace('$', ''))
-        var quantity = quantityElement.value
-        total = total + (price * quantity)
-    }
-    total = Math.round(total * 100) / 100
-    document.getElementsByClassName('cart-total-price')[0].innerText = '$' + total
+
+const cartIcon = document.querySelector('.fa-cart-arrow-down')
+const wholeCartWindow = document.querySelector('.whole-cart-window')
+wholeCartWindow.inWindow = 0
+const addToCartBtns = document.querySelectorAll('.add-to-cart-btn')
+addToCartBtns.forEach( (btn)=>{
+    btn.addEventListener('click', addItemFunction)
+}  )
+
+function addItemFunction(e){
+    const id = e.target.parentElement.parentElement.parentElement.getAttribute("data-id")
+    const img = e.target.parentElement.parentElement.previousElementSibling.src
+    const name = e.target.parentElement.previousElementSibling.textContent
+    const desc = e.target.parentElement.children[0].textContent
+    let price = e.target.parentElement.children[1].textContent
+    price = price.replace("Price: $", '')
+    const item = new CartItem(name, desc, img, price)
+    LocalCart.addItemToLocalCart(id, item)
+ console.log(price)
 }
+
+
+cartIcon.addEventListener('mouseover', ()=>{
+if(wholeCartWindow.classList.contains('hide'))
+wholeCartWindow.classList.remove('hide')
+})
+
+cartIcon.addEventListener('mouseleave', ()=>{
+    // if(wholeCartWindow.classList.contains('hide'))
+    setTimeout( () =>{
+        if(wholeCartWindow.inWindow===0){
+            wholeCartWindow.classList.add('hide')
+        }
+    } ,500 )
+    
+    })
+
+ wholeCartWindow.addEventListener('mouseover', ()=>{
+     wholeCartWindow.inWindow=1
+ })  
+ 
+ wholeCartWindow.addEventListener('mouseleave', ()=>{
+    wholeCartWindow.inWindow=0
+    wholeCartWindow.classList.add('hide')
+})  
+ 
+
+function updateCartUI(){
+    const cartWrapper = document.querySelector('.cart-wrapper')
+    cartWrapper.innerHTML=""
+    const items = LocalCart.getLocalCartItems()
+    if(items === null) return
+    let count = 0
+    let total = 0
+    for(const [key, value] of items.entries()){
+        const cartItem = document.createElement('div')
+        cartItem.classList.add('cart-item')
+        let price = value.price*value.quantity
+        price = Math.round(price*100)/100
+        count+=1
+        total += price
+        total = Math.round(total*100)/100
+        cartItem.innerHTML =
+        `
+        <img src="${value.img}"> 
+                       <div class="details">
+                           <h3>${value.name}</h3>
+                           <p>${value.desc}
+                            <span class="quantity">Quantity: ${value.quantity}</span>
+                               <span class="price">Price: $ ${price}</span>
+                           </p>
+                       </div>
+                       <div class="cancel"><i class="fas fa-window-close"></i></div>
+        `
+       cartItem.lastElementChild.addEventListener('click', ()=>{
+           LocalCart.removeItemFromCart(key)
+       })
+        cartWrapper.append(cartItem)
+    }
+
+    if(count > 0){
+        cartIcon.classList.add('non-empty')
+        let root = document.querySelector(':root')
+        root.style.setProperty('--after-content', `"${count}"`)
+        const subtotal = document.querySelector('.subtotal')
+        subtotal.innerHTML = `SubTotal: $${total}`
+    }
+    else
+    cartIcon.classList.remove('non-empty')
+}
+document.addEventListener('DOMContentLoaded', ()=>{updateCartUI()})

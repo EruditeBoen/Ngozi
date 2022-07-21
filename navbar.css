@@ -20,9 +20,9 @@ body{
     position: relative;
     width: 130px;
     cursor: pointer;
-    bottom: 960px;
+    bottom: 870px;
     left: 40px;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, .5);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 1);
     border-radius: 50%;
     z-index: 110;
   }
